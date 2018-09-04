@@ -1,0 +1,1 @@
+ALGORITHMS_PATH = './algorithms'
