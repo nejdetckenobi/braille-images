@@ -1,0 +1,87 @@
+# Braille Images
+
+Braille Images is a small command-line tool that converts bitmap images into Unicode Braille art. It reads an image from a file or standard input, resizes it, converts it to black and white, and renders the result with one of the available Braille encoders.
+
+## Features
+
+- Converts images to text output made from Unicode Braille characters.
+- Supports 6-dot and 8-dot Braille encoders.
+- Reads images from a file path or from `STDIN`.
+- Optional dithering for thresholded black-and-white output.
+- Optional negative mode to invert the generated Braille density.
+- Configurable output width and height.
+
+## Requirements
+
+- Python 3
+- [Pillow](https://python-pillow.org/)
+
+Install the Python dependency with:
+
+```bash
+python -m pip install Pillow
+```
+
+## Usage
+
+```bash
+python run.py --input-file path/to/image.png --algorithm braille8
+```
+
+You can also pipe image data through standard input:
+
+```bash
+cat path/to/image.png | python run.py --algorithm braille6
+```
+
+### Options
+
+| Option | Description | Default |
+| --- | --- | --- |
+| `-i`, `--input-file` | Image path. If omitted, image data is read from `STDIN`. | `STDIN` |
+| `-b`, `--algorithm` | Encoder to use. Current choices are `braille6` and `braille8`. | Required |
+| `-d` | Enable dithering. | Disabled |
+| `-n` | Enable negative/inverted output. | Disabled |
+| `-v` | Print source, size, dithering, negative mode, and algorithm details. | Disabled |
+| `-x` | Desired maximum image width before encoding. | `128` |
+| `-y` | Desired maximum image height before encoding. | `128` |
+
+### Examples
+
+Render an image with the 8-dot encoder at a maximum size of 100×80:
+
+```bash
+python run.py -i image.png -b braille8 -x 100 -y 80
+```
+
+Render with dithering and inverted density:
+
+```bash
+python run.py -i image.png -b braille6 -d -n
+```
+
+Show verbose conversion details:
+
+```bash
+python run.py -i image.png -b braille8 -v
+```
+
+## Encoders
+
+Encoders live in the `algorithms/` package. Each encoder module exposes an `Encoder` class with an `encode` method. The CLI discovers valid encoder modules automatically and uses their file names as algorithm choices.
+
+- `braille6`: Uses a 2×3 pixel block for each output character.
+- `braille8`: Uses a 2×4 pixel block for each output character.
+
+## Project Structure
+
+```text
+.
+├── algorithms/
+│   ├── base.py       # Shared Braille encoder logic
+│   ├── braille6.py   # 6-dot Braille encoder
+│   └── braille8.py   # 8-dot Braille encoder
+├── config.py         # Project paths
+├── examples/         # Example text output
+└── run.py            # Command-line interface
+```
