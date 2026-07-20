@@ -1,31 +1,19 @@
-class Encoder(object):
+from algorithms.base import BrailleEncoder
+
+
+class Encoder(BrailleEncoder):
     CHARSET = (
         "⠀⠁⠂⠃⠄⠅⠆⠇⠈⠉⠊⠋⠌⠍⠎⠏"
         "⠐⠑⠒⠓⠔⠕⠖⠗⠘⠙⠚⠛⠜⠝⠞⠟"
         "⠠⠡⠢⠣⠤⠥⠦⠧⠨⠩⠪⠫⠬⠭⠮⠯"
         "⠰⠱⠲⠳⠴⠵⠶⠷⠸⠹⠺⠻⠼⠽⠾⠿"
     )
-
-    @classmethod
-    def encode(cls, values, size, negative=False):
-        data = []
-        for y in range(0, (size[1] // 3) * 3, 3):
-            line = ''
-            for x in range(0, (size[0] // 3) * 3, 2):
-                chr_bin = ''.join(map(str, (
-                    values[(y + 2) * size[0] + x + 1] // 255,
-                    values[(y + 1) * size[0] + x + 1] // 255,
-                    values[(y + 0) * size[0] + x + 1] // 255,
-                    values[(y + 2) * size[0] + x + 0] // 255,
-                    values[(y + 1) * size[0] + x + 0] // 255,
-                    values[(y + 0) * size[0] + x + 0] // 255,
-                )))
-
-                index = int(chr_bin, 2)
-                if negative:
-                    index = 255 - index
-                line += cls.CHARSET[index]
-            data.append(line)
-
-        for i, l in enumerate(data):
-            print(l)
+    HEIGHT = 3
+    DOT_OFFSETS = (
+        (2, 1),
+        (1, 1),
+        (0, 1),
+        (2, 0),
+        (1, 0),
+        (0, 0),
+    )
